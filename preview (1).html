@@ -1,0 +1,4148 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PRISM — Personal Development System</title>
+
+<style>
+:root{
+    --bg:#080a0d;
+    --panel:#11151a;
+    --panel2:#181d23;
+    --border:#292f37;
+    --text:#f4f4f4;
+    --muted:#9299a2;
+    --gold:#c8a45c;
+    --gold2:#e0c47e;
+    --green:#61d18c;
+    --red:#d96c6c;
+}
+
+body.light{
+    --bg:#f4f2ed;
+    --panel:#ffffff;
+    --panel2:#eeece6;
+    --border:#d5d1c8;
+    --text:#171717;
+    --muted:#686868;
+    --gold:#99762e;
+    --gold2:#765b21;
+    --green:#328453;
+    --red:#aa4d4d;
+}
+
+*{
+    box-sizing:border-box;
+}
+
+body{
+    margin:0;
+    background:var(--bg);
+    color:var(--text);
+    font-family:Arial,Helvetica,sans-serif;
+    transition:.25s;
+}
+
+button,input,select,textarea{
+    font-family:inherit;
+}
+
+button{
+    cursor:pointer;
+}
+
+.app{
+    display:flex;
+    min-height:100vh;
+}
+
+.sidebar{
+    width:245px;
+    position:fixed;
+    top:0;
+    bottom:0;
+    left:0;
+    padding:28px 16px;
+    background:var(--bg);
+    border-right:1px solid var(--border);
+    overflow-y:auto;
+}
+
+.logo{
+    font-family:Georgia,serif;
+    font-size:29px;
+    letter-spacing:6px;
+    color:var(--gold2);
+}
+
+.logo-sub{
+    color:var(--muted);
+    font-size:9px;
+    letter-spacing:2px;
+    margin-top:5px;
+    margin-bottom:25px;
+}
+
+.theme-btn{
+    width:100%;
+    padding:10px;
+    margin-bottom:18px;
+    background:var(--panel);
+    color:var(--text);
+    border:1px solid var(--border);
+    border-radius:7px;
+}
+
+.theme-btn:hover{
+    border-color:var(--gold);
+}
+
+.nav-btn{
+    width:100%;
+    border:0;
+    background:transparent;
+    color:var(--muted);
+    padding:12px;
+    text-align:left;
+    border-radius:7px;
+    margin-bottom:3px;
+}
+
+.nav-btn:hover,
+.nav-btn.active{
+    background:var(--panel2);
+    color:var(--gold2);
+}
+
+.main{
+    margin-left:245px;
+    width:calc(100% - 245px);
+    padding:40px 45px;
+}
+
+.header{
+    display:flex;
+    justify-content:space-between;
+    margin-bottom:35px;
+}
+
+.eyebrow{
+    color:var(--gold);
+    font-size:10px;
+    letter-spacing:3px;
+    text-transform:uppercase;
+    margin-bottom:8px;
+}
+
+h1,h2,h3{
+    font-family:Georgia,serif;
+    font-weight:400;
+}
+
+h1{
+    font-size:36px;
+    margin:0;
+}
+
+h2{
+    font-size:28px;
+    margin:5px 0 20px;
+}
+
+h3{
+    margin:0 0 10px;
+}
+
+.header-date{
+    color:var(--muted);
+    font-size:13px;
+}
+
+.section{
+    display:none;
+}
+
+.section.active{
+    display:block;
+}
+
+.grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(230px,1fr));
+    gap:18px;
+}
+
+.card{
+    background:var(--panel);
+    border:1px solid var(--border);
+    border-radius:10px;
+    padding:22px;
+}
+
+.card-title{
+    color:var(--muted);
+    font-size:10px;
+    text-transform:uppercase;
+    letter-spacing:2px;
+    margin-bottom:10px;
+}
+
+.big-number{
+    font-family:Georgia,serif;
+    font-size:35px;
+}
+
+.progress{
+    height:7px;
+    background:var(--panel2);
+    border-radius:20px;
+    overflow:hidden;
+    margin-top:15px;
+}
+
+.progress-bar{
+    height:100%;
+    width:0%;
+    background:var(--gold);
+    transition:.3s;
+}
+
+.btn{
+    background:var(--gold);
+    color:#111;
+    border:0;
+    border-radius:6px;
+    padding:10px 15px;
+    font-weight:bold;
+}
+
+.btn:hover{
+    background:var(--gold2);
+}
+
+.btn-secondary{
+    background:transparent;
+    color:var(--text);
+    border:1px solid var(--border);
+    border-radius:6px;
+    padding:8px 12px;
+}
+
+.btn-secondary:hover{
+    border-color:var(--gold);
+}
+
+.btn-danger{
+    background:transparent;
+    color:var(--red);
+    border:1px solid #58353a;
+    border-radius:6px;
+    padding:8px 12px;
+}
+
+.btn-danger:hover{
+    background:rgba(217,108,108,.08);
+}
+
+.toolbar{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    gap:15px;
+    margin-bottom:20px;
+}
+
+.table-wrap{
+    overflow-x:auto;
+}
+
+table{
+    width:100%;
+    border-collapse:collapse;
+}
+
+th{
+    text-align:left;
+    color:var(--muted);
+    font-size:10px;
+    text-transform:uppercase;
+    letter-spacing:1px;
+    padding:13px;
+    border-bottom:1px solid var(--border);
+}
+
+td{
+    padding:13px;
+    border-bottom:1px solid var(--border);
+    font-size:13px;
+}
+
+tr:hover{
+    background:var(--panel2);
+}
+
+input,select,textarea{
+    background:var(--bg);
+    color:var(--text);
+    border:1px solid var(--border);
+    border-radius:6px;
+    padding:9px;
+    outline:none;
+}
+
+input:focus,
+select:focus,
+textarea:focus{
+    border-color:var(--gold);
+}
+
+.modal-bg{
+    position:fixed;
+    inset:0;
+    background:rgba(0,0,0,.78);
+    display:none;
+    align-items:center;
+    justify-content:center;
+    z-index:1000;
+}
+
+.modal-bg.show{
+    display:flex;
+}
+
+.modal{
+    width:min(600px,92%);
+    max-height:90vh;
+    overflow:auto;
+    background:var(--panel);
+    border:1px solid var(--border);
+    border-radius:10px;
+    padding:25px;
+}
+
+.modal h2{
+    margin-top:0;
+}
+
+.form-group{
+    margin-bottom:16px;
+}
+
+.form-group label{
+    display:block;
+    color:var(--muted);
+    font-size:11px;
+    margin-bottom:7px;
+}
+
+.form-group input,
+.form-group select,
+.form-group textarea{
+    width:100%;
+}
+
+.modal-actions{
+    display:flex;
+    justify-content:flex-end;
+    gap:8px;
+    margin-top:20px;
+}
+
+.cycle{
+    margin-bottom:30px;
+}
+
+.cycle-title{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-bottom:12px;
+}
+
+.cycle-meta{
+    color:var(--muted);
+    font-size:12px;
+}
+
+.learning-grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(300px,1fr));
+    gap:18px;
+}
+
+.lesson{
+    background:var(--panel);
+    border:1px solid var(--border);
+    border-radius:10px;
+    padding:22px;
+}
+
+.lesson-tag{
+    display:inline-block;
+    color:var(--gold);
+    border:1px solid #5c4b2c;
+    border-radius:20px;
+    padding:5px 9px;
+    font-size:9px;
+    letter-spacing:1.5px;
+    text-transform:uppercase;
+}
+
+.lesson h2{
+    font-size:22px;
+    margin:12px 0;
+}
+
+.lesson p,
+.lesson li{
+    font-size:14px;
+    line-height:1.65;
+}
+
+.language-box{
+    background:var(--bg);
+    border:1px solid var(--border);
+    border-radius:8px;
+    padding:15px;
+    margin-top:12px;
+}
+
+.language-title{
+    color:var(--gold2);
+    font-weight:bold;
+    margin-bottom:8px;
+}
+
+.vocab{
+    display:flex;
+    flex-wrap:wrap;
+    gap:7px;
+}
+
+.word{
+    border:1px solid var(--border);
+    padding:7px 9px;
+    border-radius:5px;
+    font-size:12px;
+}
+
+.roleplay{
+    border-left:3px solid var(--gold);
+    padding-left:15px;
+}
+
+.exercise{
+    background:var(--panel2);
+    border:1px solid var(--border);
+    border-radius:7px;
+    padding:15px;
+    margin-top:12px;
+}
+
+.exercise-title{
+    color:var(--gold);
+    font-size:10px;
+    font-weight:bold;
+    letter-spacing:1px;
+    text-transform:uppercase;
+}
+
+.cert-link{
+    color:var(--gold2);
+    text-decoration:none;
+    font-weight:bold;
+}
+
+.cert-link:hover{
+    text-decoration:underline;
+}
+
+.cert-img{
+    width:100px;
+    max-height:75px;
+    object-fit:cover;
+    border-radius:5px;
+    border:1px solid var(--border);
+    margin-top:5px;
+}
+
+.cert-container{
+    display:flex;
+    flex-direction:column;
+    gap:5px;
+}
+
+.quote{
+    margin-top:30px;
+    padding:25px;
+    border-left:3px solid var(--gold);
+    color:var(--gold2);
+    font-family:Georgia,serif;
+    font-size:20px;
+}
+
+.week-badge{
+    display:inline-block;
+    margin-top:8px;
+    padding:7px 12px;
+    border:1px solid var(--border);
+    border-radius:20px;
+    color:var(--gold2);
+    font-size:11px;
+    letter-spacing:1px;
+}
+
+@media(max-width:800px){
+
+    .app{
+        display:block;
+    }
+
+    .sidebar{
+        position:relative;
+        width:100%;
+        height:auto;
+        bottom:auto;
+    }
+
+    .main{
+        margin-left:0;
+        width:100%;
+        padding:25px 18px;
+    }
+
+    .header{
+        display:block;
+    }
+
+    .header-date{
+        margin-top:10px;
+    }
+
+    .toolbar{
+        flex-direction:column;
+        align-items:flex-start;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<div class="app">
+
+<aside class="sidebar">
+
+<div class="logo">PRISM</div>
+
+<div class="logo-sub">
+PERSONAL DEVELOPMENT SYSTEM
+</div>
+
+<button
+class="theme-btn"
+id="themeBtn"
+onclick="toggleTheme()">
+☀️ Modo claro
+</button>
+
+<button class="nav-btn active" onclick="showTab('dashboard',this)">
+Dashboard
+</button>
+
+<button class="nav-btn" onclick="showTab('university',this)">
+Universidad
+</button>
+
+<button class="nav-btn" onclick="showTab('courses',this)">
+Cursos & Certificaciones
+</button>
+
+<button class="nav-btn" onclick="showTab('experience',this)">
+Experiencia
+</button>
+
+<button class="nav-btn" onclick="showTab('goals',this)">
+Goals
+</button>
+
+<button class="nav-btn" onclick="showTab('knowledge',this)">
+Knowledge
+</button>
+
+<button class="nav-btn" onclick="showTab('documents',this)">
+Documentos
+</button>
+
+<button class="nav-btn" onclick="showTab('teachings',this)">
+Enseñanzas
+</button>
+
+<button class="nav-btn" onclick="showTab('languages',this)">
+Idiomas
+</button>
+
+</aside>
+
+<main class="main">
+
+<div class="header">
+
+<div>
+
+<div class="eyebrow">
+Personal Operating System
+</div>
+
+<h1 id="pageTitle">
+Dashboard
+</h1>
+
+<div
+class="week-badge"
+id="weekBadge">
+Semana 1 · 5 años
+</div>
+
+</div>
+
+<div
+class="header-date"
+id="currentDate">
+</div>
+
+</div>
+
+
+<!-- =========================
+DASHBOARD
+========================= -->
+
+<section id="dashboard" class="section active">
+
+<div class="grid">
+
+<div class="card">
+
+<div class="card-title">
+Universidad Completion
+</div>
+
+<div
+class="big-number"
+id="dashUniversity">
+0%
+</div>
+
+<div class="progress">
+
+<div
+id="dashUniversityBar"
+class="progress-bar">
+</div>
+
+</div>
+
+</div>
+
+
+<div class="card">
+
+<div class="card-title">
+Cursos completados
+</div>
+
+<div
+class="big-number"
+id="dashCourses">
+0%
+</div>
+
+<div class="progress">
+
+<div
+id="dashCoursesBar"
+class="progress-bar">
+</div>
+
+</div>
+
+</div>
+
+
+<div class="card">
+
+<div class="card-title">
+Certificados
+</div>
+
+<div
+class="big-number"
+id="dashCertificates">
+0
+</div>
+
+</div>
+
+
+<div class="card">
+
+<div class="card-title">
+Growth Focus
+</div>
+
+<div class="big-number" style="font-size:22px">
+Executive Growth
+</div>
+
+</div>
+
+</div>
+
+<div class="quote">
+<span id="weeklyQuote">
+Growth is a system, not a moment.
+</span>
+</div>
+
+</section>
+
+
+<!-- =========================
+UNIVERSIDAD
+========================= -->
+
+<section id="university" class="section">
+
+<div class="toolbar">
+
+<div>
+
+<div class="eyebrow">
+Academic Tracker
+</div>
+
+<h2>
+Universidad
+</h2>
+
+</div>
+
+</div>
+
+<div
+class="grid"
+style="margin-bottom:25px">
+
+<div class="card">
+
+<div class="card-title">
+Completion
+</div>
+
+<div
+class="big-number"
+id="uniCompletion">
+0%
+</div>
+
+<div class="progress">
+
+<div
+class="progress-bar"
+id="uniCompletionBar">
+</div>
+
+</div>
+
+</div>
+
+
+<div class="card">
+
+<div class="card-title">
+Promedio
+</div>
+
+<div
+class="big-number"
+id="uniAverage">
+0
+</div>
+
+</div>
+
+</div>
+
+<div id="universityContainer"></div>
+
+</section>
+
+
+<!-- =========================
+COURSES
+========================= -->
+
+<section id="courses" class="section">
+
+<div class="toolbar">
+
+<div>
+
+<div class="eyebrow">
+Professional Development
+</div>
+
+<h2>
+Cursos & Certificaciones
+</h2>
+
+</div>
+
+<button
+class="btn"
+onclick="openCourseModal()">
++ Agregar curso
+</button>
+
+</div>
+
+<div class="table-wrap">
+
+<table>
+
+<thead>
+
+<tr>
+<th>Fecha</th>
+<th>Curso</th>
+<th>Estado</th>
+<th>Certificado</th>
+<th>Acciones</th>
+</tr>
+
+</thead>
+
+<tbody id="coursesTable"></tbody>
+
+</table>
+
+</div>
+
+</section>
+
+
+<!-- =========================
+EXPERIENCE
+========================= -->
+
+<section id="experience" class="section">
+
+<div class="toolbar">
+
+<div>
+
+<div class="eyebrow">
+Career Capital
+</div>
+
+<h2>
+Experiencia
+</h2>
+
+</div>
+
+<button
+class="btn"
+onclick="openGenericModal('experience')">
++ Agregar experiencia
+</button>
+
+</div>
+
+<div id="experienceContainer"></div>
+
+</section>
+
+
+<!-- =========================
+GOALS
+========================= -->
+
+<section id="goals" class="section">
+
+<div class="toolbar">
+
+<div>
+
+<div class="eyebrow">
+Direction
+</div>
+
+<h2>
+Goals
+</h2>
+
+</div>
+
+<button
+class="btn"
+onclick="openGenericModal('goals')">
++ Agregar Goal
+</button>
+
+</div>
+
+<div id="goalsContainer"></div>
+
+</section>
+
+
+<!-- =========================
+KNOWLEDGE
+========================= -->
+
+<section id="knowledge" class="section">
+
+<div class="toolbar">
+
+<div>
+
+<div class="eyebrow">
+Intellectual Capital
+</div>
+
+<h2>
+Knowledge
+</h2>
+
+</div>
+
+<button
+class="btn"
+onclick="openGenericModal('knowledge')">
++ Agregar conocimiento
+</button>
+
+</div>
+
+<div id="knowledgeContainer"></div>
+
+</section>
+
+
+<!-- =========================
+DOCUMENTS
+========================= -->
+
+<section id="documents" class="section">
+
+<div class="toolbar">
+
+<div>
+
+<div class="eyebrow">
+Personal Archive
+</div>
+
+<h2>
+Documentos
+</h2>
+
+</div>
+
+<button
+class="btn"
+onclick="openGenericModal('documents')">
++ Agregar documento
+</button>
+
+</div>
+
+<div id="documentsContainer"></div>
+
+</section>
+
+
+<!-- =========================
+TEACHINGS
+========================= -->
+
+<section id="teachings" class="section">
+
+<div class="eyebrow">
+Weekly Executive Learning
+</div>
+
+<h2>
+Enseñanza de la semana
+</h2>
+
+<div id="teachingContainer"></div>
+
+</section>
+
+
+<!-- =========================
+LANGUAGES
+========================= -->
+
+<section id="languages" class="section">
+
+<div class="eyebrow">
+Professional Language Development
+</div>
+
+<h2>
+Idiomas
+</h2>
+
+<p style="color:var(--muted)">
+Una lección semanal enfocada en inglés, francés y portugués para meetings,
+presentaciones, negociación y comunicación profesional.
+</p>
+
+<div id="languageContainer"></div>
+
+</section>
+
+</main>
+</div>
+
+
+<!-- =====================================================
+COURSE MODAL
+===================================================== -->
+
+<div
+class="modal-bg"
+id="courseModal">
+
+<div class="modal">
+
+<h2>
+Agregar curso
+</h2>
+
+<div class="form-group">
+
+<label>
+Nombre del curso
+</label>
+
+<input
+id="courseName"
+type="text"
+placeholder="Ej. Excel Avanzado">
+
+</div>
+
+<div class="form-group">
+
+<label>
+Fecha de completion
+</label>
+
+<input
+id="courseDate"
+type="date">
+
+</div>
+
+<div class="form-group">
+
+<label>
+Estado
+</label>
+
+<select id="courseStatus">
+
+<option value="Pendiente">
+Pendiente
+</option>
+
+<option value="En progreso">
+En progreso
+</option>
+
+<option value="Completado">
+Completado
+</option>
+
+</select>
+
+</div>
+
+<div class="form-group">
+
+<label>
+Link del certificado
+</label>
+
+<input
+id="courseCertificate"
+type="url"
+placeholder="https://...">
+
+</div>
+
+<div class="form-group">
+
+<label>
+O subir imagen del certificado
+</label>
+
+<input
+id="courseCertificateFile"
+type="file"
+accept="image/*">
+
+<div
+id="certificateFileName"
+style="color:var(--muted);font-size:12px;margin-top:6px">
+</div>
+
+</div>
+
+<div class="modal-actions">
+
+<button
+class="btn-secondary"
+onclick="closeCourseModal()">
+Cancelar
+</button>
+
+<button
+class="btn"
+onclick="saveCourse()">
+Guardar curso
+</button>
+
+</div>
+
+</div>
+</div>
+
+
+<!-- =====================================================
+CERTIFICATE MODAL
+===================================================== -->
+
+<div
+class="modal-bg"
+id="certificateModal">
+
+<div class="modal">
+
+<h2>
+Agregar certificado
+</h2>
+
+<p style="color:var(--muted);font-size:13px">
+Puedes agregar el certificado mediante un enlace o subir una fotografía.
+</p>
+
+<div class="form-group">
+
+<label>
+Link del certificado
+</label>
+
+<input
+id="certificateLinkInput"
+type="url"
+placeholder="https://drive.google.com/...">
+
+</div>
+
+<div
+style="
+text-align:center;
+color:var(--muted);
+font-size:12px;
+margin:5px 0 18px;">
+— O —
+</div>
+
+<div class="form-group">
+
+<label>
+Fotografía del certificado
+</label>
+
+<input
+id="certificateImageInput"
+type="file"
+accept="image/*">
+
+<div
+id="certificateImageName"
+style="color:var(--muted);font-size:12px;margin-top:6px">
+</div>
+
+</div>
+
+<div class="modal-actions">
+
+<button
+class="btn-secondary"
+onclick="closeCertificateModal()">
+Cancelar
+</button>
+
+<button
+class="btn"
+onclick="saveCertificate()">
+Guardar certificado
+</button>
+
+</div>
+
+</div>
+</div>
+
+
+<!-- =====================================================
+EDIT DATE MODAL
+===================================================== -->
+
+<div
+class="modal-bg"
+id="dateModal">
+
+<div class="modal">
+
+<h2>
+Editar fecha
+</h2>
+
+<p style="color:var(--muted);font-size:13px">
+Aquí solamente puedes modificar la fecha de completion.
+</p>
+
+<div class="form-group">
+
+<label>
+Nueva fecha de completion
+</label>
+
+<input
+id="editDateInput"
+type="date">
+
+</div>
+
+<div class="modal-actions">
+
+<button
+class="btn-secondary"
+onclick="closeDateModal()">
+Cancelar
+</button>
+
+<button
+class="btn"
+onclick="saveEditedDate()">
+Guardar fecha
+</button>
+
+</div>
+
+</div>
+</div>
+
+
+<!-- =====================================================
+GENERIC MODAL
+===================================================== -->
+
+<div
+class="modal-bg"
+id="genericModal">
+
+<div class="modal">
+
+<h2 id="genericTitle">
+Agregar
+</h2>
+
+<div class="form-group">
+
+<label>
+Título
+</label>
+
+<input id="genericName">
+
+</div>
+
+<div class="form-group">
+
+<label>
+Descripción
+</label>
+
+<textarea
+id="genericDescription"
+rows="5">
+</textarea>
+
+</div>
+
+<div class="modal-actions">
+
+<button
+class="btn-secondary"
+onclick="closeGenericModal()">
+Cancelar
+</button>
+
+<button
+class="btn"
+onclick="saveGeneric()">
+Guardar
+</button>
+
+</div>
+
+</div>
+</div>
+
+
+<script>
+
+/* ======================================================
+HELPERS
+====================================================== */
+
+function escapeHTML(value){
+
+    const div=document.createElement("div");
+
+    div.textContent=value ?? "";
+
+    return div.innerHTML;
+}
+
+
+function loadData(key,fallback){
+
+    try{
+
+        const data=localStorage.getItem(key);
+
+        if(!data){
+            return fallback;
+        }
+
+        return JSON.parse(data);
+
+    }catch(error){
+
+        console.error(
+            "Error leyendo localStorage:",
+            error
+        );
+
+        return fallback;
+    }
+}
+
+
+function saveData(key,data){
+
+    try{
+
+        localStorage.setItem(
+            key,
+            JSON.stringify(data)
+        );
+
+        return true;
+
+    }catch(error){
+
+        console.error(error);
+
+        alert(
+            "No se pudo guardar la información. " +
+            "Si estás guardando una imagen muy grande, " +
+            "intenta usar una fotografía más pequeña."
+        );
+
+        return false;
+    }
+}
+
+
+/* ======================================================
+SEMANA AUTOMÁTICA — 5 AÑOS
+SEMANA 1 = LUNES 10 DE AGOSTO DE 2026
+====================================================== */
+
+const PROGRAM_START_DATE=
+new Date("2026-08-10T00:00:00");
+
+
+const TOTAL_PROGRAM_WEEKS=260;
+
+
+function getProgramWeek(){
+
+    const now=new Date();
+
+    const today=new Date(
+        now.getFullYear(),
+        now.getMonth(),
+        now.getDate()
+    );
+
+
+    const start=new Date(
+        PROGRAM_START_DATE.getFullYear(),
+        PROGRAM_START_DATE.getMonth(),
+        PROGRAM_START_DATE.getDate()
+    );
+
+
+    const difference=
+    today.getTime()-start.getTime();
+
+
+    if(difference<0){
+        return 1;
+    }
+
+
+    const elapsedWeeks=
+    Math.floor(
+        difference/
+        (
+            1000*
+            60*
+            60*
+            24*
+            7
+        )
+    );
+
+
+    return Math.min(
+        elapsedWeeks+1,
+        TOTAL_PROGRAM_WEEKS
+    );
+}
+
+
+function updateWeekDisplay(){
+
+    const week=
+    getProgramWeek();
+
+
+    document.getElementById(
+        "weekBadge"
+    ).textContent=
+    "Semana "+
+    week+
+    " · 5 años";
+
+
+    return week;
+}
+
+
+updateWeekDisplay();
+
+
+/* ======================================================
+DATE
+====================================================== */
+
+document.getElementById("currentDate").textContent=
+new Date().toLocaleDateString(
+"es-GT",
+{
+    weekday:"long",
+    year:"numeric",
+    month:"long",
+    day:"numeric"
+}
+);
+
+
+/* ======================================================
+THEME
+====================================================== */
+
+const savedTheme=
+localStorage.getItem("prism_theme");
+
+if(savedTheme==="light"){
+
+    document.body.classList.add("light");
+
+    document.getElementById("themeBtn").textContent=
+    "🌙 Modo oscuro";
+}
+
+
+function toggleTheme(){
+
+    document.body.classList.toggle("light");
+
+    const light=
+    document.body.classList.contains("light");
+
+    localStorage.setItem(
+        "prism_theme",
+        light ? "light" : "dark"
+    );
+
+    document.getElementById("themeBtn").textContent=
+    light
+    ?
+    "🌙 Modo oscuro"
+    :
+    "☀️ Modo claro";
+}
+
+
+/* ======================================================
+NAVIGATION
+====================================================== */
+
+const tabTitles={
+
+    dashboard:"Dashboard",
+    university:"Universidad",
+    courses:"Cursos & Certificaciones",
+    experience:"Experiencia",
+    goals:"Goals",
+    knowledge:"Knowledge",
+    documents:"Documentos",
+    teachings:"Enseñanzas",
+    languages:"Idiomas"
+
+};
+
+
+function showTab(id,button){
+
+    document
+    .querySelectorAll(".section")
+    .forEach(section=>{
+        section.classList.remove("active");
+    });
+
+    document
+    .getElementById(id)
+    .classList.add("active");
+
+    document
+    .querySelectorAll(".nav-btn")
+    .forEach(btn=>{
+        btn.classList.remove("active");
+    });
+
+    button.classList.add("active");
+
+    document.getElementById("pageTitle").textContent=
+    tabTitles[id];
+}
+
+
+/* ======================================================
+UNIVERSITY
+====================================================== */
+
+const universityData=[
+
+["Ciclo 1",[
+["ADMINISTRACIÓN I",3,61],
+["FUNDAMENTOS DE DERECHO",3,84],
+["MATEMÁTICA APLICADA A LA ADMINISTRACIÓN I",3,75],
+["TALLER DE COMPUTO I",3,83]
+]],
+
+["Ciclo 2",[
+["ADMINISTRACIÓN II",3,66],
+["LEGISLACIÓN GUATEMALTECA",3,0],
+["MATEMÁTICA APLICADA A LA ADMINISTRACIÓN II",3,73],
+["TALLER DE COMPUTO II",3,97]
+]],
+
+["Ciclo 3",[
+["ADMINISTRACIÓN III",3,0],
+["CONTABILIDAD I",3,0],
+["DERECHO LABORAL",3,0],
+["TALLER DE COMPUTO III",3,0]
+]],
+
+["Ciclo 4",[
+["ADMINISTRACIÓN IV",3,97],
+["CONTABILIDAD II",3,15],
+["DERECHO MERCANTIL",3,77],
+["TALLER DE COMPUTO IV",3,85]
+]],
+
+["Ciclo 5",[
+["ADMINISTRACIÓN DE RECURSOS HUMANOS",3,89],
+["MATEMÁTICA APLICADA A LOS NEGOCIOS",3,80],
+["MERCADOTECNIA",3,93],
+["TECNOLOGÍA DESCRIPTIVA",3,95]
+]],
+
+["Ciclo 6",[
+["COMPORTAMIENTO ORGANIZACIONAL",3,92],
+["ESTADÍSTICA",3,64],
+["GLOBALIZACIÓN Y SUS OPORTUNIDADES",3,97],
+["HISTORIA DE LA CIENCIA Y TECNOLOGÍA",3,100]
+]],
+
+["Ciclo 7",[
+["COMERCIO INTERNACIONAL",3,""],
+["DISEÑO Y EVALUACIÓN DE PROYECTOS I",3,""],
+["PSICOLOGÍA APLICADA A LA EMPRESA",3,""],
+["TOMA DE DECISIONES FINANCIERAS",3,""]
+]],
+
+["Ciclo 8",[
+["COACHING",3,100],
+["DISEÑO Y EVALUACIÓN DE PROYECTOS II",3,""],
+["ÉTICA Y DESARROLLO HUMANO PROFESIONAL",3,64],
+["PRESUPUESTOS",3,""]
+]],
+
+["Ciclo 9",[
+["COMPORTAMIENTO DE LAS ORGANIZACIONES",3,89],
+["INTRODUCCIÓN A LA FILOSOFÍA",3,78],
+["MÉTODOS Y TÉCNICAS DE INVESTIGACIÓN DOCUMENTAL",3,80],
+["METROLOGÍA",3,72]
+]],
+
+["Ciclo 10",[
+["ADMINISTRACIÓN DE RECURSOS NATURALES Y RECURSOS ENERGÉTICOS",3,97],
+["ESTADÍSTICA APLICADA",3,""],
+["LEGISLACIÓN APLICADA A LA EMPRESA",3,85],
+["TEORÍA GERENCIAL",3,85]
+]],
+
+["Ciclo 11",[
+["CONTABILIDAD GERENCIAL",3,""],
+["CONTROL DE CALIDAD",3,""],
+["SISTEMA GENERAL DE ECUACIONES",3,""]
+]],
+
+["Ciclo 12",[
+["ADMINISTRACIÓN FINANCIERA",3,""],
+["DERECHO ADMINISTRATIVO",3,""],
+["ECONOMÍA I",3,""],
+["TECNOLOGÍA I",3,""]
+]],
+
+["Ciclo 13",[
+["ADMINISTRACIÓN DE RIESGOS I",3,""],
+["ECONOMÍA II",3,""],
+["PSICOLOGÍA DE LAS ORGANIZACIONES",3,""],
+["TECNOLOGÍA II",3,""]
+]],
+
+["Ciclo 14",[
+["ADMINISTRACIÓN DE NEGOCIOS",3,""],
+["LIDERAZGO",3,""],
+["MATEMÁTICA FINANCIERA I",3,""],
+["TOMA DE DECISIONES FINANCIERAS II",3,""]
+]],
+
+["Ciclo 15",[
+["ADMINISTRACIÓN POR OBJETIVOS",3,""],
+["ELABORACIÓN DE TRABAJO FINAL DE GRADUACIÓN I",3,""],
+["MATEMÁTICA FINANCIERA II",3,""],
+["PLANEACIÓN ESTRATÉGICA I",3,""]
+]],
+
+["Ciclo 16",[
+["ADMINISTRACIÓN INTERNACIONAL",3,""],
+["ELABORACIÓN DE TRABAJO FINAL DE GRADUACIÓN II",3,""],
+["INVESTIGACIÓN DE OPERACIONES",3,""],
+["PLANEACIÓN ESTRATÉGICA II",3,""]
+]]
+
+];
+
+
+let universityState=
+loadData(
+"prism_university",
+[]
+);
+
+
+function renderUniversity(){
+
+    let html="";
+    let index=0;
+    let total=0;
+    let approved=0;
+    let grades=[];
+
+
+    universityData.forEach(cycle=>{
+
+        html+=`
+        <div class="cycle">
+
+        <div class="cycle-title">
+
+        <h3>${cycle[0]}</h3>
+
+        <span class="cycle-meta">
+        ${cycle[1].length} cursos
+        </span>
+
+        </div>
+
+        <div class="table-wrap">
+
+        <table>
+
+        <thead>
+
+        <tr>
+        <th>Curso</th>
+        <th>Créditos</th>
+        <th>Estado</th>
+        <th>Nota</th>
+        </tr>
+
+        </thead>
+
+        <tbody>
+        `;
+
+
+        cycle[1].forEach(course=>{
+
+            const i=index++;
+
+            const saved=
+            universityState[i] || {};
+
+
+            const note=
+            saved.note !== undefined
+            ?
+            saved.note
+            :
+            course[2];
+
+
+            const checked=
+            saved.approved===true;
+
+
+            total++;
+
+
+            if(checked){
+                approved++;
+            }
+
+
+            if(
+                note!==""
+                &&
+                Number(note)>0
+            ){
+
+                grades.push(Number(note));
+            }
+
+
+            html+=`
+
+            <tr>
+
+            <td>
+            ${escapeHTML(course[0])}
+            </td>
+
+            <td>
+            ${course[1]}
+            </td>
+
+            <td>
+
+            <input
+            type="checkbox"
+            ${checked?"checked":""}
+            onchange="
+            updateUniversity(
+                ${i},
+                'approved',
+                this.checked
+            )">
+
+            </td>
+
+            <td>
+
+            <input
+            type="number"
+            min="0"
+            max="100"
+            value="${note}"
+            onchange="
+            updateUniversity(
+                ${i},
+                'note',
+                this.value
+            )">
+
+            </td>
+
+            </tr>
+            `;
+
+        });
+
+
+        html+=`
+
+        </tbody>
+        </table>
+
+        </div>
+        </div>
+        `;
+
+    });
+
+
+    document.getElementById(
+        "universityContainer"
+    ).innerHTML=html;
+
+
+    const completion=
+    total
+    ?
+    Math.round(
+        approved/total*100
+    )
+    :
+    0;
+
+
+    const average=
+    grades.length
+    ?
+    (
+        grades.reduce(
+            (a,b)=>a+b,
+            0
+        )
+        /
+        grades.length
+    ).toFixed(1)
+    :
+    0;
+
+
+    document.getElementById(
+        "uniCompletion"
+    ).textContent=
+    completion+"%";
+
+
+    document.getElementById(
+        "uniCompletionBar"
+    ).style.width=
+    completion+"%";
+
+
+    document.getElementById(
+        "uniAverage"
+    ).textContent=
+    average;
+
+
+    document.getElementById(
+        "dashUniversity"
+    ).textContent=
+    completion+"%";
+
+
+    document.getElementById(
+        "dashUniversityBar"
+    ).style.width=
+    completion+"%";
+}
+
+
+function updateUniversity(
+    index,
+    key,
+    value
+){
+
+    if(!universityState[index]){
+        universityState[index]={};
+    }
+
+
+    universityState[index][key]=value;
+
+
+    saveData(
+        "prism_university",
+        universityState
+    );
+
+
+    renderUniversity();
+}
+
+
+/* ======================================================
+COURSES
+====================================================== */
+
+const defaultCourses=[
+
+{
+date:"2026-08-31",
+name:"Excel Avanzado",
+status:"Pendiente",
+certificateLink:"",
+certificateFile:""
+},
+
+{
+date:"2026-09-30",
+name:"Power BI",
+status:"Pendiente",
+certificateLink:"",
+certificateFile:""
+},
+
+{
+date:"2026-10-31",
+name:"Finanzas para Gerentes",
+status:"Pendiente",
+certificateLink:"",
+certificateFile:""
+},
+
+{
+date:"2026-11-30",
+name:"Project Management",
+status:"Pendiente",
+certificateLink:"",
+certificateFile:""
+},
+
+{
+date:"2026-12-20",
+name:"Proyecto integrador",
+status:"Pendiente",
+certificateLink:"",
+certificateFile:""
+},
+
+{
+date:"2027-03-31",
+name:"Lean Six Sigma Green Belt",
+status:"Pendiente",
+certificateLink:"",
+certificateFile:""
+},
+
+{
+date:"2027-06-30",
+name:"CAPM",
+status:"Pendiente",
+certificateLink:"",
+certificateFile:""
+},
+
+{
+date:"2027-09-30",
+name:"Negociación",
+status:"Pendiente",
+certificateLink:"",
+certificateFile:""
+},
+
+{
+date:"2027-12-15",
+name:"Comunicación ejecutiva",
+status:"Pendiente",
+certificateLink:"",
+certificateFile:""
+},
+
+{
+date:"2028-06-30",
+name:"Strategic Management",
+status:"Pendiente",
+certificateLink:"",
+certificateFile:""
+},
+
+{
+date:"2028-09-30",
+name:"Change Management",
+status:"Pendiente",
+certificateLink:"",
+certificateFile:""
+},
+
+{
+date:"2028-12-15",
+name:"Business Analytics",
+status:"Pendiente",
+certificateLink:"",
+certificateFile:""
+},
+
+{
+date:"2029",
+name:"MBA",
+status:"Pendiente",
+certificateLink:"",
+certificateFile:""
+},
+
+{
+date:"2029",
+name:"Corporate Finance",
+status:"Pendiente",
+certificateLink:"",
+certificateFile:""
+},
+
+{
+date:"2030",
+name:"PMP",
+status:"Pendiente",
+certificateLink:"",
+certificateFile:""
+},
+
+{
+date:"2030",
+name:"Executive Leadership",
+status:"Pendiente",
+certificateLink:"",
+certificateFile:""
+},
+
+{
+date:"2030",
+name:"P&L / Strategic Finance",
+status:"Pendiente",
+certificateLink:"",
+certificateFile:""
+}
+
+];
+
+
+let courses=
+loadData(
+"prism_courses",
+defaultCourses
+);
+
+
+courses=courses.map(course=>({
+
+    date:course.date ?? "",
+    name:course.name ?? "",
+    status:course.status ?? "Pendiente",
+    certificateLink:course.certificateLink ?? "",
+    certificateFile:course.certificateFile ?? ""
+
+}));
+
+
+saveData(
+"prism_courses",
+courses
+);
+
+
+/* ======================================================
+RENDER COURSES
+====================================================== */
+
+function renderCourses(){
+
+    const tbody=
+    document.getElementById(
+        "coursesTable"
+    );
+
+
+    tbody.innerHTML="";
+
+
+    courses.forEach((course,index)=>{
+
+        const row=
+        document.createElement("tr");
+
+
+        let certificate="";
+
+
+        if(
+            course.certificateLink ||
+            course.certificateFile
+        ){
+
+            certificate=`
+            <div class="cert-container">
+            `;
+
+
+            if(course.certificateLink){
+
+                certificate+=`
+
+                <a
+                class="cert-link"
+                href="${escapeHTML(course.certificateLink)}"
+                target="_blank"
+                rel="noopener noreferrer">
+
+                🔗 Ver certificado
+
+                </a>
+
+                `;
+            }
+
+
+            if(course.certificateFile){
+
+                certificate+=`
+
+                <a
+                href="${course.certificateFile}"
+                target="_blank"
+                title="Abrir certificado">
+
+                <img
+                class="cert-img"
+                src="${course.certificateFile}"
+                alt="Certificado">
+
+                </a>
+
+                `;
+            }
+
+
+            certificate+=`
+
+            <button
+            class="btn-secondary"
+            onclick="addCertificate(${index})">
+
+            Editar certificado
+
+            </button>
+
+            </div>
+            `;
+
+        }else{
+
+            certificate=`
+
+            <button
+            class="btn-secondary"
+            onclick="addCertificate(${index})">
+
+            + Agregar certificado
+
+            </button>
+
+            `;
+        }
+
+
+        row.innerHTML=`
+
+        <td>
+        ${escapeHTML(course.date)}
+        </td>
+
+        <td>
+        <strong>
+        ${escapeHTML(course.name)}
+        </strong>
+        </td>
+
+        <td>
+
+        <select
+        onchange="
+        changeCourseStatus(
+            ${index},
+            this.value
+        )">
+
+        <option
+        value="Pendiente"
+        ${course.status==="Pendiente"?"selected":""}>
+        Pendiente
+        </option>
+
+        <option
+        value="En progreso"
+        ${course.status==="En progreso"?"selected":""}>
+        En progreso
+        </option>
+
+        <option
+        value="Completado"
+        ${course.status==="Completado"?"selected":""}>
+        Completado
+        </option>
+
+        </select>
+
+        </td>
+
+        <td>
+        ${certificate}
+        </td>
+
+        <td>
+
+        <div
+        style="
+        display:flex;
+        gap:6px;
+        flex-wrap:wrap;">
+
+        <button
+        class="btn-secondary"
+        onclick="editCourse(${index})">
+
+        Editar fecha
+
+        </button>
+
+        <button
+        class="btn-danger"
+        onclick="deleteCourse(${index})">
+
+        Borrar
+
+        </button>
+
+        </div>
+
+        </td>
+
+        `;
+
+
+        tbody.appendChild(row);
+
+    });
+
+
+    const completed=
+    courses.filter(
+        c=>c.status==="Completado"
+    ).length;
+
+
+    const percentage=
+    courses.length
+    ?
+    Math.round(
+        completed/courses.length*100
+    )
+    :
+    0;
+
+
+    document.getElementById(
+        "dashCourses"
+    ).textContent=
+    percentage+"%";
+
+
+    document.getElementById(
+        "dashCoursesBar"
+    ).style.width=
+    percentage+"%";
+
+
+    document.getElementById(
+        "dashCertificates"
+    ).textContent=
+    courses.filter(
+        c=>
+        c.certificateLink ||
+        c.certificateFile
+    ).length;
+}
+
+
+function changeCourseStatus(
+    index,
+    status
+){
+
+    if(!courses[index]){
+        return;
+    }
+
+
+    courses[index].status=
+    status;
+
+
+    saveData(
+        "prism_courses",
+        courses
+    );
+
+
+    renderCourses();
+}
+
+
+let editingCourseIndex=null;
+
+
+function editCourse(index){
+
+    if(!courses[index]){
+        return;
+    }
+
+
+    editingCourseIndex=index;
+
+
+    const date=
+    courses[index].date;
+
+
+    let inputDate="";
+
+
+    if(
+        /^\d{4}-\d{2}-\d{2}$/.test(date)
+    ){
+
+        inputDate=date;
+
+    }else if(
+        /^\d{4}$/.test(date)
+    ){
+
+        inputDate=
+        date+"-01-01";
+
+    }
+
+
+    document.getElementById(
+        "editDateInput"
+    ).value=inputDate;
+
+
+    document.getElementById(
+        "dateModal"
+    ).classList.add("show");
+}
+
+
+function closeDateModal(){
+
+    editingCourseIndex=null;
+
+    document.getElementById(
+        "dateModal"
+    ).classList.remove("show");
+}
+
+
+function saveEditedDate(){
+
+    if(
+        editingCourseIndex===null ||
+        !courses[editingCourseIndex]
+    ){
+
+        closeDateModal();
+
+        return;
+    }
+
+
+    const newDate=
+    document.getElementById(
+        "editDateInput"
+    ).value;
+
+
+    if(!newDate){
+
+        alert(
+            "Selecciona una fecha."
+        );
+
+        return;
+    }
+
+
+    courses[editingCourseIndex].date=
+    newDate;
+
+
+    const saved=
+    saveData(
+        "prism_courses",
+        courses
+    );
+
+
+    if(saved){
+
+        closeDateModal();
+
+        renderCourses();
+    }
+}
+
+
+function deleteCourse(index){
+
+    if(!courses[index]){
+        return;
+    }
+
+
+    if(
+        !confirm(
+            "¿Quieres borrar este curso?"
+        )
+    ){
+
+        return;
+    }
+
+
+    courses.splice(
+        index,
+        1
+    );
+
+
+    saveData(
+        "prism_courses",
+        courses
+    );
+
+
+    renderCourses();
+}
+
+
+/* ======================================================
+CERTIFICATE
+====================================================== */
+
+let certificateCourseIndex=null;
+
+
+function addCertificate(index){
+
+    if(!courses[index]){
+        return;
+    }
+
+
+    certificateCourseIndex=index;
+
+
+    document.getElementById(
+        "certificateLinkInput"
+    ).value=
+    courses[index].certificateLink || "";
+
+
+    document.getElementById(
+        "certificateImageInput"
+    ).value="";
+
+
+    document.getElementById(
+        "certificateImageName"
+    ).textContent=
+    courses[index].certificateFile
+    ?
+    "Ya existe una imagen guardada. Puedes reemplazarla."
+    :
+    "";
+
+
+    document.getElementById(
+        "certificateModal"
+    ).classList.add("show");
+}
+
+
+function closeCertificateModal(){
+
+    certificateCourseIndex=null;
+
+    document.getElementById(
+        "certificateModal"
+    ).classList.remove("show");
+}
+
+
+document.getElementById(
+    "certificateImageInput"
+).addEventListener(
+    "change",
+    function(){
+
+        const file=
+        this.files[0];
+
+
+        document.getElementById(
+            "certificateImageName"
+        ).textContent=
+        file
+        ?
+        "Archivo seleccionado: "+file.name
+        :
+        "";
+
+    }
+);
+
+
+function saveCertificate(){
+
+    if(
+        certificateCourseIndex===null ||
+        !courses[certificateCourseIndex]
+    ){
+
+        closeCertificateModal();
+
+        return;
+    }
+
+
+    const link=
+    document.getElementById(
+        "certificateLinkInput"
+    ).value.trim();
+
+
+    const file=
+    document.getElementById(
+        "certificateImageInput"
+    ).files[0];
+
+
+    if(!link && !file){
+
+        if(
+            !courses[certificateCourseIndex].certificateLink &&
+            !courses[certificateCourseIndex].certificateFile
+        ){
+
+            alert(
+                "Agrega un link o selecciona una imagen."
+            );
+
+            return;
+        }
+
+        closeCertificateModal();
+
+        return;
+    }
+
+
+    if(link){
+
+        courses[certificateCourseIndex]
+        .certificateLink=link;
+
+    }
+
+
+    if(file){
+
+        const reader=
+        new FileReader();
+
+
+        reader.onload=function(event){
+
+            courses[
+                certificateCourseIndex
+            ].certificateFile=
+            event.target.result;
+
+
+            const saved=
+            saveData(
+                "prism_courses",
+                courses
+            );
+
+
+            if(saved){
+
+                closeCertificateModal();
+
+                renderCourses();
+            }
+
+        };
+
+
+        reader.onerror=function(){
+
+            alert(
+                "No se pudo leer la imagen."
+            );
+
+        };
+
+
+        reader.readAsDataURL(file);
+
+    }else{
+
+        const saved=
+        saveData(
+            "prism_courses",
+            courses
+        );
+
+
+        if(saved){
+
+            closeCertificateModal();
+
+            renderCourses();
+        }
+    }
+}
+
+
+/* ======================================================
+COURSE MODAL
+====================================================== */
+
+function openCourseModal(){
+
+    document.getElementById(
+        "courseName"
+    ).value="";
+
+
+    document.getElementById(
+        "courseDate"
+    ).value="";
+
+
+    document.getElementById(
+        "courseStatus"
+    ).value="Pendiente";
+
+
+    document.getElementById(
+        "courseCertificate"
+    ).value="";
+
+
+    document.getElementById(
+        "courseCertificateFile"
+    ).value="";
+
+
+    document.getElementById(
+        "certificateFileName"
+    ).textContent="";
+
+
+    document.getElementById(
+        "courseModal"
+    ).classList.add("show");
+}
+
+
+function closeCourseModal(){
+
+    document.getElementById(
+        "courseModal"
+    ).classList.remove("show");
+}
+
+
+document.getElementById(
+    "courseCertificateFile"
+).addEventListener(
+    "change",
+    function(){
+
+        const file=this.files[0];
+
+
+        document.getElementById(
+            "certificateFileName"
+        ).textContent=
+        file
+        ?
+        "Archivo: "+file.name
+        :
+        "";
+
+    }
+);
+
+
+function saveCourse(){
+
+    const name=
+    document.getElementById(
+        "courseName"
+    ).value.trim();
+
+
+    if(!name){
+
+        alert(
+            "Escribe el nombre del curso."
+        );
+
+        return;
+    }
+
+
+    const date=
+    document.getElementById(
+        "courseDate"
+    ).value;
+
+
+    const status=
+    document.getElementById(
+        "courseStatus"
+    ).value;
+
+
+    const link=
+    document.getElementById(
+        "courseCertificate"
+    ).value.trim();
+
+
+    const file=
+    document.getElementById(
+        "courseCertificateFile"
+    ).files[0];
+
+
+    if(file){
+
+        const reader=
+        new FileReader();
+
+
+        reader.onload=function(event){
+
+            courses.push({
+
+                name:name,
+
+                date:
+                date || "Sin fecha",
+
+                status:status,
+
+                certificateLink:link,
+
+                certificateFile:
+                event.target.result
+
+            });
+
+
+            const saved=
+            saveData(
+                "prism_courses",
+                courses
+            );
+
+
+            if(saved){
+
+                closeCourseModal();
+
+                renderCourses();
+            }
+
+        };
+
+
+        reader.readAsDataURL(file);
+
+    }else{
+
+        courses.push({
+
+            name:name,
+
+            date:
+            date || "Sin fecha",
+
+            status:status,
+
+            certificateLink:link,
+
+            certificateFile:""
+
+        });
+
+
+        const saved=
+        saveData(
+            "prism_courses",
+            courses
+        );
+
+
+        if(saved){
+
+            closeCourseModal();
+
+            renderCourses();
+        }
+    }
+}
+
+
+/* ======================================================
+GENERIC TABS
+====================================================== */
+
+const genericData={
+
+    experience:
+    loadData(
+        "prism_experience",
+        []
+    ),
+
+    goals:
+    loadData(
+        "prism_goals",
+        []
+    ),
+
+    knowledge:
+    loadData(
+        "prism_knowledge",
+        []
+    ),
+
+    documents:
+    loadData(
+        "prism_documents",
+        []
+    )
+};
+
+
+let genericCurrent="";
+
+
+function openGenericModal(type){
+
+    genericCurrent=type;
+
+
+    document.getElementById(
+        "genericTitle"
+    ).textContent=
+    "Agregar "+type;
+
+
+    document.getElementById(
+        "genericName"
+    ).value="";
+
+
+    document.getElementById(
+        "genericDescription"
+    ).value="";
+
+
+    document.getElementById(
+        "genericModal"
+    ).classList.add("show");
+}
+
+
+function closeGenericModal(){
+
+    document.getElementById(
+        "genericModal"
+    ).classList.remove("show");
+}
+
+
+function saveGeneric(){
+
+    const name=
+    document.getElementById(
+        "genericName"
+    ).value.trim();
+
+
+    const description=
+    document.getElementById(
+        "genericDescription"
+    ).value.trim();
+
+
+    if(!name){
+
+        alert(
+            "Escribe un título."
+        );
+
+        return;
+    }
+
+
+    genericData[
+        genericCurrent
+    ].push({
+
+        name:name,
+
+        description:description
+
+    });
+
+
+    saveData(
+        "prism_"+genericCurrent,
+        genericData[genericCurrent]
+    );
+
+
+    closeGenericModal();
+
+
+    renderGeneric(
+        genericCurrent
+    );
+}
+
+
+function renderGeneric(type){
+
+    const container=
+    document.getElementById(
+        type+"Container"
+    );
+
+
+    if(
+        genericData[type].length===0
+    ){
+
+        container.innerHTML=`
+
+        <div class="card">
+
+        <p style="color:var(--muted)">
+        Todavía no has agregado elementos.
+        </p>
+
+        </div>
+
+        `;
+
+        return;
+    }
+
+
+    container.innerHTML=
+    genericData[type]
+    .map(
+        (item,index)=>`
+
+        <div
+        class="card"
+        style="margin-bottom:12px">
+
+        <h3>
+        ${escapeHTML(item.name)}
+        </h3>
+
+        <p style="color:var(--muted)">
+        ${escapeHTML(item.description)}
+        </p>
+
+        <button
+        class="btn-danger"
+        onclick="
+        deleteGeneric(
+            '${type}',
+            ${index}
+        )">
+
+        Borrar
+
+        </button>
+
+        </div>
+
+        `
+    )
+    .join("");
+}
+
+
+function deleteGeneric(
+    type,
+    index
+){
+
+    if(
+        !confirm(
+            "¿Borrar este elemento?"
+        )
+    ){
+        return;
+    }
+
+
+    genericData[type].splice(
+        index,
+        1
+    );
+
+
+    saveData(
+        "prism_"+type,
+        genericData[type]
+    );
+
+
+    renderGeneric(type);
+}
+
+
+/* ======================================================
+ENSEÑANZAS — 260 SEMANAS
+====================================================== */
+
+const teachings=[
+
+{
+category:"Lean Six Sigma",
+title:"Root Cause Analysis",
+text:"No te quedes con el síntoma. Busca la causa que realmente está generando el problema.",
+exercise:"Elige un problema real de tu trabajo y utiliza los 5 Why's para encontrar una causa raíz."
+},
+
+{
+category:"Finanzas",
+title:"Working Capital",
+text:"Una empresa puede tener ventas importantes y aun así sufrir problemas de liquidez. El capital de trabajo conecta la operación con el efectivo.",
+exercise:"Piensa en una empresa y menciona qué elementos podrían aumentar o reducir su capital de trabajo."
+},
+
+{
+category:"Administración",
+title:"Control Management",
+text:"Un buen sistema de control no solamente detecta errores. También ayuda a evitar que vuelvan a suceder.",
+exercise:"Identifica un proceso y diseña un control preventivo y uno correctivo."
+},
+
+{
+category:"Contabilidad",
+title:"Contribution Margin",
+text:"El margen de contribución muestra cuánto queda después de los costos variables para cubrir costos fijos y generar utilidad.",
+exercise:"Elige un producto y separa mentalmente sus costos variables y fijos."
+},
+
+{
+category:"Liderazgo",
+title:"Delegation",
+text:"Delegar significa transferir responsabilidad manteniendo claridad sobre el resultado esperado.",
+exercise:"Elige una tarea que podrías delegar y define resultado, fecha y criterio de éxito."
+},
+
+{
+category:"Lean Six Sigma",
+title:"Process Improvement",
+text:"Antes de automatizar un proceso debes asegurarte de que el proceso realmente tenga sentido.",
+exercise:"Identifica un proceso innecesariamente complicado y escribe cómo podrías simplificarlo."
+},
+
+{
+category:"Estrategia",
+title:"Competitive Advantage",
+text:"Una ventaja competitiva permite que una organización entregue más valor que sus competidores de manera sostenible.",
+exercise:"Identifica una empresa y escribe cuál crees que es su principal ventaja competitiva."
+},
+
+{
+category:"Liderazgo",
+title:"Situational Leadership",
+text:"No todos los colaboradores necesitan el mismo estilo de liderazgo. El líder efectivo adapta su enfoque según la situación.",
+exercise:"Piensa en un colaborador y decide si necesita dirección, coaching, apoyo o delegación."
+},
+
+{
+category:"Finanzas",
+title:"Return on Investment",
+text:"El ROI ayuda a evaluar si una inversión está generando suficiente retorno respecto al capital utilizado.",
+exercise:"Piensa en una inversión personal o empresarial y calcula aproximadamente su retorno."
+},
+
+{
+category:"Marketing",
+title:"Customer Value",
+text:"Los clientes no compran solamente productos. Compran soluciones a problemas y resultados que consideran valiosos.",
+exercise:"Elige un producto y explica qué problema real resuelve para el cliente."
+},
+
+{
+category:"Administración",
+title:"Decision Making",
+text:"Una buena decisión combina información, análisis, experiencia y capacidad para actuar bajo incertidumbre.",
+exercise:"Identifica una decisión pendiente y escribe tres alternativas antes de elegir."
+},
+
+{
+category:"Negociación",
+title:"BATNA",
+text:"Tu mejor alternativa a un acuerdo negociado determina cuánto poder tienes durante una negociación.",
+exercise:"Antes de una negociación importante, identifica cuál sería tu alternativa si no llegas a un acuerdo."
+},
+
+{
+category:"Operaciones",
+title:"Bottlenecks",
+text:"Un cuello de botella limita la capacidad total de un proceso y puede afectar todo el sistema.",
+exercise:"Identifica un proceso de trabajo y busca dónde se acumula más tiempo o trabajo."
+},
+
+{
+category:"Gestión",
+title:"KPIs",
+text:"Un KPI útil debe ayudar a tomar decisiones. Medir demasiadas cosas puede ocultar lo verdaderamente importante.",
+exercise:"Selecciona un proceso y define un KPI de calidad, uno de productividad y uno de resultado."
+},
+
+{
+category:"Liderazgo",
+title:"Feedback",
+text:"El feedback efectivo se enfoca en comportamientos observables, impacto y acciones futuras.",
+exercise:"Prepara un ejemplo de feedback utilizando comportamiento, impacto y recomendación."
+}
+
+];
+
+
+function getWeeklyIndex(array){
+
+    const week=getProgramWeek();
+
+    return(
+        (week-1)%array.length
+    );
+}
+
+
+function renderTeachings(){
+
+    const item=
+    teachings[
+        getWeeklyIndex(teachings)
+    ];
+
+
+    const week=getProgramWeek();
+
+
+    document.getElementById(
+        "teachingContainer"
+    ).innerHTML=`
+
+    <div class="learning-grid">
+
+    <div class="lesson">
+
+    <div class="lesson-tag">
+    Semana ${week} · ${item.category}
+    </div>
+
+    <h2>
+    ${item.title}
+    </h2>
+
+    <p>
+    ${item.text}
+    </p>
+
+    <div class="exercise">
+
+    <div class="exercise-title">
+    Weekly Application
+    </div>
+
+    <p>
+    ${item.exercise}
+    </p>
+
+    </div>
+
+    </div>
+
+    </div>
+
+    `;
+}
+
+
+/* ======================================================
+IDIOMAS — SEMANA 1 DESDE EL INICIO
+====================================================== */
+
+const languageTopics=[
+
+{
+
+topic:"Leading a Meeting",
+
+grammar:{
+
+en:"Use modal verbs to communicate objectives: We need to..., We should..., We could..., Let's...",
+
+fr:"Utilisez les verbes et expressions appropriés pour présenter les objectifs : Nous devons..., Nous devrions..., Nous pourrions..., Commençons...",
+
+pt:"Use estruturas profissionais para apresentar objetivos: Precisamos..., Devemos..., Poderíamos..., Vamos..."
+
+},
+
+examples:{
+
+en:[
+"Let's get started.",
+"The main objective is to review our results.",
+"We need to agree on the next steps."
+],
+
+fr:[
+"Commençons.",
+"L'objectif principal est d'examiner nos résultats.",
+"Nous devons définir les prochaines étapes."
+],
+
+pt:[
+"Vamos começar.",
+"O principal objetivo é analisar nossos resultados.",
+"Precisamos definir os próximos passos."
+]
+
+},
+
+roleplay:{
+
+en:"You are leading a team meeting. Open the meeting, explain the objective, review one KPI and ask the team for input.",
+
+fr:"Vous dirigez une réunion. Commencez la réunion, expliquez l'objectif, présentez un KPI et demandez l'avis de l'équipe.",
+
+pt:"Você está liderando uma reunião. Comece a reunião, explique o objetivo, apresente um KPI e peça a opinião da equipe."
+
+},
+
+vocabulary:{
+
+en:[
+"agenda",
+"objective",
+"performance",
+"next steps",
+"action item",
+"deadline",
+"priority",
+"stakeholder"
+],
+
+fr:[
+"ordre du jour",
+"objectif",
+"performance",
+"prochaines étapes",
+"action",
+"échéance",
+"priorité",
+"partie prenante"
+],
+
+pt:[
+"agenda",
+"objetivo",
+"desempenho",
+"próximos passos",
+"ação",
+"prazo",
+"prioridade",
+"parte interessada"
+]
+
+},
+
+exercise:{
+
+en:"Speak for 3 minutes as if you were leading a real meeting.",
+
+fr:"Parlez pendant 2 minutes comme si vous dirigiez une vraie réunion.",
+
+pt:"Fale durante 1 minuto como se estivesse liderando uma reunião real."
+
+}
+
+},
+
+{
+
+topic:"Executive Presentation",
+
+grammar:{
+
+en:"Use signposting: First..., Moving on to..., As you can see..., Finally...",
+
+fr:"Utilisez des expressions pour structurer une présentation : Premièrement..., Passons à..., Comme vous pouvez le voir..., Enfin...",
+
+pt:"Use expressões para estruturar uma apresentação: Primeiro..., Passando para..., Como podemos ver..., Finalmente..."
+
+},
+
+examples:{
+
+en:[
+"First, let's look at the results.",
+"As you can see, performance improved.",
+"Finally, I'd like to discuss our recommendation."
+],
+
+fr:[
+"Premièrement, examinons les résultats.",
+"Comme vous pouvez le voir, les résultats se sont améliorés.",
+"Enfin, je voudrais présenter notre recommandation."
+],
+
+pt:[
+"Primeiro, vamos analisar os resultados.",
+"Como podemos ver, o desempenho melhorou.",
+"Finalmente, gostaria de apresentar nossa recomendação."
+]
+
+},
+
+roleplay:{
+
+en:"Present a business problem to an executive. Explain the situation, data, recommendation and expected result.",
+
+fr:"Présentez un problème professionnel à un dirigeant. Expliquez la situation, les données, la recommandation et le résultat attendu.",
+
+pt:"Apresente um problema de negócios para um executivo. Explique a situação, os dados, a recomendação e o resultado esperado."
+
+},
+
+vocabulary:{
+
+en:[
+"revenue",
+"performance",
+"trend",
+"challenge",
+"recommendation",
+"impact",
+"forecast",
+"result"
+],
+
+fr:[
+"revenus",
+"performance",
+"tendance",
+"défi",
+"recommandation",
+"impact",
+"prévision",
+"résultat"
+],
+
+pt:[
+"receita",
+"desempenho",
+"tendência",
+"desafio",
+"recomendação",
+"impacto",
+"previsão",
+"resultado"
+]
+
+},
+
+exercise:{
+
+en:"Choose one KPI and present it in English for three minutes.",
+
+fr:"Choisissez un KPI et présentez-le en français pendant deux minutes.",
+
+pt:"Escolha um KPI e apresente-o em português durante um minuto."
+
+}
+
+},
+
+{
+
+topic:"Negotiation",
+
+grammar:{
+
+en:"Use conditional language: If we..., we could... / Would you consider...? / We might be able to...",
+
+fr:"Utilisez le conditionnel : Si nous..., nous pourrions... / Envisageriez-vous...? / Nous pourrions...",
+
+pt:"Use o condicional: Se nós..., poderíamos... / Você consideraria...? / Poderíamos..."
+
+},
+
+examples:{
+
+en:[
+"If we increase the budget, we could accelerate the project.",
+"Would you consider extending the deadline?",
+"We might be able to offer an alternative."
+],
+
+fr:[
+"Si nous augmentons le budget, nous pourrions accélérer le projet.",
+"Envisageriez-vous de prolonger le délai ?",
+"Nous pourrions proposer une alternative."
+],
+
+pt:[
+"Se aumentarmos o orçamento, poderíamos acelerar o projeto.",
+"Você consideraria estender o prazo?",
+"Poderíamos oferecer uma alternativa."
+]
+
+},
+
+roleplay:{
+
+en:"Negotiate additional budget for a project. The other person says there is no budget available.",
+
+fr:"Négociez un budget supplémentaire pour un projet. L'autre personne dit qu'il n'y a pas de budget disponible.",
+
+pt:"Negocie um orçamento adicional para um projeto. A outra pessoa diz que não há orçamento disponível."
+
+},
+
+vocabulary:{
+
+en:[
+"budget",
+"proposal",
+"terms",
+"priority",
+"concession",
+"agreement",
+"value",
+"investment"
+],
+
+fr:[
+"budget",
+"proposition",
+"conditions",
+"priorité",
+"concession",
+"accord",
+"valeur",
+"investissement"
+],
+
+pt:[
+"orçamento",
+"proposta",
+"condições",
+"prioridade",
+"concessão",
+"acordo",
+"valor",
+"investimento"
+]
+
+},
+
+exercise:{
+
+en:"Negotiate a budget increase for three minutes.",
+
+fr:"Négociez une augmentation de budget pendant deux minutes.",
+
+pt:"Negocie um aumento de orçamento durante un minuto."
+
+}
+
+},
+
+{
+
+topic:"Business Strategy",
+
+grammar:{
+
+en:"Use strategic language: Our priority is..., We aim to..., Our strategy is..., We need to focus on...",
+
+fr:"Utilisez un langage stratégique : Notre priorité est..., Nous visons à..., Notre stratégie est..., Nous devons nous concentrer sur...",
+
+pt:"Use linguagem estratégica: Nossa prioridade é..., Nosso objetivo é..., Nossa estratégia é..., Precisamos focar em..."
+
+},
+
+examples:{
+
+en:[
+"Our priority is sustainable growth.",
+"We aim to increase customer retention.",
+"Our strategy is based on operational efficiency."
+],
+
+fr:[
+"Notre priorité est la croissance durable.",
+"Nous visons à augmenter la fidélisation des clients.",
+"Notre stratégie repose sur l'efficacité opérationnelle."
+],
+
+pt:[
+"Nossa prioridade é o crescimento sustentável.",
+"Nosso objetivo é aumentar a retenção de clientes.",
+"Nossa estratégia é baseada na eficiência operacional."
+]
+
+},
+
+roleplay:{
+
+en:"Explain your company's strategy to a new manager and describe the three most important priorities.",
+
+fr:"Expliquez la stratégie de votre entreprise à un nouveau manager et décrivez les trois priorités les plus importantes.",
+
+pt:"Explique a estratégia da sua empresa para um novo gerente e descreva as três prioridades mais importantes."
+
+},
+
+vocabulary:{
+
+en:[
+"strategy",
+"growth",
+"retention",
+"efficiency",
+"market",
+"competitive advantage",
+"objective",
+"priority"
+],
+
+fr:[
+"stratégie",
+"croissance",
+"fidélisation",
+"efficacité",
+"marché",
+"avantage concurrentiel",
+"objectif",
+"priorité"
+],
+
+pt:[
+"estratégia",
+"crescimento",
+"retenção",
+"eficiência",
+"mercado",
+"vantagem competitiva",
+"objetivo",
+"prioridade"
+]
+
+},
+
+exercise:{
+
+en:"Explain a business strategy for three minutes.",
+
+fr:"Expliquez une stratégie d'entreprise pendant deux minutes.",
+
+pt:"Explique uma estratégia empresarial durante um minuto."
+
+}
+
+},
+
+{
+
+topic:"Leadership & Feedback",
+
+grammar:{
+
+en:"Use constructive feedback: I noticed..., One opportunity is..., I recommend..., Going forward...",
+
+fr:"Utilisez un feedback constructif : J'ai remarqué..., Une opportunité est..., Je recommande..., À l'avenir...",
+
+pt:"Use feedback construtivo: Eu percebi..., Uma oportunidade é..., Recomendo..., Daqui para frente..."
+
+},
+
+examples:{
+
+en:[
+"I noticed that the report was delivered late.",
+"One opportunity is to improve communication.",
+"I recommend setting clearer expectations."
+],
+
+fr:[
+"J'ai remarqué que le rapport a été livré en retard.",
+"Une opportunité est d'améliorer la communication.",
+"Je recommande de définir des attentes plus claires."
+],
+
+pt:[
+"Percebi que o relatório foi entregue atrasado.",
+"Uma oportunidade é melhorar a comunicação.",
+"Recomendo estabelecer expectativas mais claras."
+]
+
+},
+
+roleplay:{
+
+en:"Give constructive feedback to an employee who has good results but needs to improve communication.",
+
+fr:"Donnez un feedback constructif à un employé qui obtient de bons résultats mais doit améliorer sa communication.",
+
+pt:"Dê feedback construtivo a um funcionário que apresenta bons resultados, mas precisa melhorar a comunicação."
+
+},
+
+vocabulary:{
+
+en:[
+"feedback",
+"performance",
+"expectation",
+"development",
+"strength",
+"opportunity",
+"coaching",
+"improvement"
+],
+
+fr:[
+"feedback",
+"performance",
+"attente",
+"développement",
+"force",
+"opportunité",
+"coaching",
+"amélioration"
+],
+
+pt:[
+"feedback",
+"desempenho",
+"expectativa",
+"desenvolvimento",
+"ponto forte",
+"oportunidade",
+"coaching",
+"melhoria"
+]
+
+},
+
+exercise:{
+
+en:"Give constructive feedback for three minutes.",
+
+fr:"Donnez un feedback constructif pendant deux minutes.",
+
+pt:"Dê feedback construtivo durante um minuto."
+
+}
+
+}
+
+];
+
+
+function renderLanguages(){
+
+    const item=
+    languageTopics[
+        getWeeklyIndex(languageTopics)
+    ];
+
+
+    const week=getProgramWeek();
+
+
+    document.getElementById(
+        "languageContainer"
+    ).innerHTML=`
+
+    <div class="learning-grid">
+
+    <div class="lesson">
+
+    <div class="lesson-tag">
+    Semana ${week} · 1 · Grammar
+    </div>
+
+    <h2>
+    ${item.topic}
+    </h2>
+
+    <div class="language-box">
+
+    <div class="language-title">
+    🇬🇧 English
+    </div>
+
+    <p>
+    ${item.grammar.en}
+    </p>
+
+    </div>
+
+
+    <div class="language-box">
+
+    <div class="language-title">
+    🇫🇷 Français
+    </div>
+
+    <p>
+    ${item.grammar.fr}
+    </p>
+
+    </div>
+
+
+    <div class="language-box">
+
+    <div class="language-title">
+    🇧🇷 Português
+    </div>
+
+    <p>
+    ${item.grammar.pt}
+    </p>
+
+    </div>
+
+    </div>
+
+
+    <div class="lesson">
+
+    <div class="lesson-tag">
+    2 · Examples
+    </div>
+
+    <h2>
+    Ejemplos
+    </h2>
+
+
+    <div class="language-box">
+
+    <div class="language-title">
+    🇬🇧 English
+    </div>
+
+    ${item.examples.en
+    .map(
+        x=>`<p>• ${escapeHTML(x)}</p>`
+    )
+    .join("")}
+
+    </div>
+
+
+    <div class="language-box">
+
+    <div class="language-title">
+    🇫🇷 Français
+    </div>
+
+    ${item.examples.fr
+    .map(
+        x=>`<p>• ${escapeHTML(x)}</p>`
+    )
+    .join("")}
+
+    </div>
+
+
+    <div class="language-box">
+
+    <div class="language-title">
+    🇧🇷 Português
+    </div>
+
+    ${item.examples.pt
+    .map(
+        x=>`<p>• ${escapeHTML(x)}</p>`
+    )
+    .join("")}
+
+    </div>
+
+    </div>
+
+
+    <div class="lesson">
+
+    <div class="lesson-tag">
+    3 · Role Play
+    </div>
+
+    <h2>
+    Role Play
+    </h2>
+
+
+    <div class="roleplay">
+
+    <h3>🇬🇧 English</h3>
+
+    <p>
+    ${item.roleplay.en}
+    </p>
+
+
+    <h3>🇫🇷 Français</h3>
+
+    <p>
+    ${item.roleplay.fr}
+    </p>
+
+
+    <h3>🇧🇷 Português</h3>
+
+    <p>
+    ${item.roleplay.pt}
+    </p>
+
+    </div>
+
+    </div>
+
+
+    <div class="lesson">
+
+    <div class="lesson-tag">
+    4 · Vocabulary
+    </div>
+
+    <h2>
+    Vocabulario profesional
+    </h2>
+
+
+    <h3>🇬🇧 English</h3>
+
+    <div class="vocab">
+
+    ${item.vocabulary.en
+    .map(
+        x=>`
+        <span class="word">
+        ${escapeHTML(x)}
+        </span>
+        `
+    )
+    .join("")}
+
+    </div>
+
+
+    <h3>🇫🇷 Français</h3>
+
+    <div class="vocab">
+
+    ${item.vocabulary.fr
+    .map(
+        x=>`
+        <span class="word">
+        ${escapeHTML(x)}
+        </span>
+        `
+    )
+    .join("")}
+
+    </div>
+
+
+    <h3>🇧🇷 Português</h3>
+
+    <div class="vocab">
+
+    ${item.vocabulary.pt
+    .map(
+        x=>`
+        <span class="word">
+        ${escapeHTML(x)}
+        </span>
+        `
+    )
+    .join("")}
+
+    </div>
+
+    </div>
+
+
+    <div class="lesson">
+
+    <div class="lesson-tag">
+    5 · Speaking Exercise
+    </div>
+
+    <h2>
+    Ejercicio
+    </h2>
+
+
+    <div class="exercise">
+
+    <div class="exercise-title">
+    🇬🇧 English
+    </div>
+
+    <p>
+    ${item.exercise.en}
+    </p>
+
+    </div>
+
+
+    <div class="exercise">
+
+    <div class="exercise-title">
+    🇫🇷 Français
+    </div>
+
+    <p>
+    ${item.exercise.fr}
+    </p>
+
+    </div>
+
+
+    <div class="exercise">
+
+    <div class="exercise-title">
+    🇧🇷 Português
+    </div>
+
+    <p>
+    ${item.exercise.pt}
+    </p>
+
+    </div>
+
+    </div>
+
+
+    <div class="lesson">
+
+    <div class="lesson-tag">
+    Weekly Challenge
+    </div>
+
+    <h2>
+    Executive Communication Challenge
+    </h2>
+
+    <p>
+    Utiliza el mismo escenario profesional en los tres idiomas.
+    </p>
+
+
+    <div class="exercise">
+
+    <div class="exercise-title">
+    🇬🇧 English
+    </div>
+
+    <p>
+    Habla durante 3 minutos sin leer un guion.
+    </p>
+
+    </div>
+
+
+    <div class="exercise">
+
+    <div class="exercise-title">
+    🇫🇷 Français
+    </div>
+
+    <p>
+    Parle pendant 2 minutos sin traducir palabra por palabra.
+    </p>
+
+    </div>
+
+
+    <div class="exercise">
+
+    <div class="exercise-title">
+    🇧🇷 Português
+    </div>
+
+    <p>
+    Fale durante 1 minuto utilizando el vocabulario aprendido.
+    </p>
+
+    </div>
+
+
+    <p
+    style="
+    color:var(--gold2);
+    font-family:Georgia,serif;
+    font-size:17px;
+    margin-top:20px">
+
+    Think → Speak → Improve.
+
+    </p>
+
+    </div>
+
+    </div>
+    `;
+}
+
+
+/* ======================================================
+INITIALIZE
+====================================================== */
+
+renderUniversity();
+
+renderCourses();
+
+renderTeachings();
+
+renderLanguages();
+
+renderGeneric("experience");
+
+renderGeneric("goals");
+
+renderGeneric("knowledge");
+
+renderGeneric("documents");
+
+
+/* ======================================================
+ACTUALIZACIÓN AUTOMÁTICA
+====================================================== */
+
+let lastKnownWeek=
+getProgramWeek();
+
+
+setInterval(function(){
+
+    const currentWeek=
+    getProgramWeek();
+
+
+    if(currentWeek!==lastKnownWeek){
+
+        lastKnownWeek=currentWeek;
+
+
+        updateWeekDisplay();
+
+        renderTeachings();
+
+        renderLanguages();
+    }
+
+},60000);
+
+
+/* ======================================================
+CLOSE MODALS
+====================================================== */
+
+document.querySelectorAll(".modal-bg").forEach(modal=>{
+
+    modal.addEventListener(
+        "click",
+        function(event){
+
+            if(event.target===modal){
+
+                modal.classList.remove("show");
+
+            }
+
+        }
+    );
+
+});
+
+</script>
+
+</body>
+</html>
